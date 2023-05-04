@@ -20,6 +20,9 @@ class outputter(object):
   def put_para(self, text):
     pass
 
+  def put_page_jump(self):
+    pass
+
   def put_image(self, path, max_width):
     pass
 
@@ -60,15 +63,17 @@ class md_outputter(outputter):
 
   def put_title(self, text, level):
     text = text.strip()
-    if not fuzz.ratio(text, g.last_title.get(level, ''), score_cutoff=92):
-      self.ofile.write('#' * level + ' ' + text + '\n\n')
-      g.last_title[level] = text
+    self.ofile.write('#' * level + ' ' + text + '\n\n')
+    g.last_title[level] = text
 
   def put_list(self, text, level):
-    self.ofile.write('  ' * level + '* ' + text.strip() + '\n')
+    self.ofile.write('  ' * level + '- ' + text.strip() + '\n\n')
 
   def put_para(self, text):
     self.ofile.write(text + '\n\n')
+
+  def put_page_jump(self):
+    self.ofile.write('---\n\n')
 
   def put_image(self, path, max_width=None):
     if max_width is None:
@@ -83,10 +88,10 @@ class md_outputter(outputter):
     self.ofile.write('\n'.join([gen_table_row(row) for row in table[1:]]) + '\n\n')
 
   def get_accent(self, text):
-    return ' _' + text + '_ '
+    return ' *' + text + '* '
 
   def get_strong(self, text):
-    return ' __' + text + '__ '
+    return ' **' + text + '** '
 
   def get_colored(self, text, rgb):
     return ' <span style="color:#%s">%s</span> ' % (str(rgb), text)

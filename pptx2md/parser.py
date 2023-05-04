@@ -43,7 +43,7 @@ def is_list_block(shape):
   for para in shape.text_frame.paragraphs:
     if para.level not in levels:
       levels.append(para.level)
-    if para.level != 0 or len(levels) > 1:
+    if para.level != 0 or len(levels) > 0:
       return True
   return False
 
@@ -207,6 +207,9 @@ def parse(prs, outputer):
         notes += process_picture(shape, idx + 1)
       elif shape.shape_type == MSO_SHAPE_TYPE.TABLE:
         notes += process_table(shape, idx + 1)
+
+    out.put_page_jump()
+
   out.close()
 
   if len(notes) > 0:
